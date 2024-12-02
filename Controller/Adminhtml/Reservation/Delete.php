@@ -49,7 +49,7 @@ class Delete extends Action
             $reservation = $this->reservationRepository->getById($reservationId);
             $this->reservationRepository->deleteById($reservationId);
 
-            $this->messageManager->addSuccessMessage(__("You have deleted the reservation {$reservationId}. A log has been saved with the information."));
+            $this->messageManager->addSuccessMessage(__("You have deleted the reservation '%1'. A log has been saved with the information.", $reservationId));
 
             $this->logger->info(
                 'Reservation deleted:',
@@ -63,7 +63,7 @@ class Delete extends Action
             );
         } catch (\Exception $e) {
             $this->logger->info("Error deleting reservation", [$e->getMessage()]);
-            $this->messageManager->addExceptionMessage($e, __("We can\'t delete that reservation."));
+            $this->messageManager->addExceptionMessage($e, __("We can't delete that reservation."));
         }
 
         return $resultRedirect->setPath('*/*/index');
