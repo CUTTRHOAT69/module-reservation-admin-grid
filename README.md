@@ -1,6 +1,6 @@
 ## Main Functionalities
  - Admin grid to manage store reservations with ACL to chose who is allowed to view and/or delete
- - CRUD for Reservations, to be able to do many thing more easily, like GetById and DeleteById
+ - CRUD for Reservations, to be able to do many things more easily, like GetById and DeleteById
  - Custom log called reservations_logger.log
 
 ## Installation
