@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Heliton. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Catalog::catalog">
+                    <resource id="Heliton_ReservationAdminGrid::general" title="Heliton Reservation General" sortOrder="99">
+                        <resource id="Heliton_ReservationAdminGrid::index" title="Heliton Reservation Index" sortOrder="100"/>
+                        <resource id="Heliton_ReservationAdminGrid::grid" title="Heliton Reservation Grid" sortOrder="110"/>
+                        <resource id="Heliton_ReservationAdminGrid::delete" title="Heliton Reservation Grid delete action" sortOrder="120"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

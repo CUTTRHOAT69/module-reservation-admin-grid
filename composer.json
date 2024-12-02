@@ -1,0 +1,22 @@
+{
+    "name": "heliton/module-reservation-admin-grid",
+    "description": "Admin reservation grid",
+    "type": "magento2-module",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Heliton",
+            "email": "heliton.rudolf@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Heliton\\ReservationAdminGrid\\": ""
+        }
+    }
+}
