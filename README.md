@@ -10,9 +10,3 @@
 
 ## Configuration
  - Admin menu can be accessed in:  Reservations -> Grid Reservations.
-
-
-## Specifications
-
- - Observer
-	- checkout_cart_product_add_before > Hibrido\SplitQuoteItems\Observer\Frontend\Checkout\CartProductAddBefore
