@@ -1,14 +1,3 @@
-# Mage2 Module Heliton ReservationAdminGrid
-
-    ``heliton/module-reservation-admin-grid``
-
- - [Main Functionalities](#markdown-header-main-functionalities)
- - [Installation](#markdown-header-installation)
- - [Configuration](#markdown-header-configuration)
- - [Specifications](#markdown-header-specifications)
- - [Attributes](#markdown-header-attributes)
-
-
 ## Main Functionalities
  - Admin grid to manage store reservations with ACL to chose who is allowed to view and/or delete
  - CRUD for Reservations, to be able to do many thing more easily, like GetById and DeleteById
