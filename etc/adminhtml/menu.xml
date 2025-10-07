@@ -7,6 +7,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="Heliton_ReservationAdminGrid::general" title="Reservations" translate="title" module="Heliton_ReservationAdminGrid" sortOrder="75" resource="Heliton_ReservationAdminGrid::general"/>
-        <add id="Heliton_ReservationAdminGrid::grid" title="Grid Reservations"  translate="title" module="Heliton_ReservationAdminGrid" sortOrder="10" parent="Heliton_ReservationAdminGrid::general" action="h_reservations/reservation" resource="Heliton_ReservationAdminGrid::general"/>
+        <add id="Heliton_ReservationAdminGrid::grid" title="Reservations Grid"  translate="title" module="Heliton_ReservationAdminGrid" sortOrder="10" parent="Heliton_ReservationAdminGrid::general" action="h_reservations/reservation" resource="Heliton_ReservationAdminGrid::general"/>
+        <add id="Heliton_ReservationAdminGrid::incorrect_grid" title="Incorrect Reservations Grid"  translate="title" module="Heliton_ReservationAdminGrid" sortOrder="15" parent="Heliton_ReservationAdminGrid::general" action="h_reservations/incorrect" resource="Heliton_ReservationAdminGrid::general"/>
     </menu>
 </config>

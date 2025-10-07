@@ -21,7 +21,36 @@ class Metadata extends AbstractRenderer
     public function render(DataObject $row)
     {
         $jsonMetadata = $row->getMetadata();
-        $metadatas = json_decode($jsonMetadata,true);
+        $metadatas = json_decode($jsonMetadata, true);
+
+        if ($metadatas == null) {
+            return $this->manageMultipleMetadatas($jsonMetadata);
+        }
+
+        return $this->manageSingleMetadata($metadatas);
+    }
+
+    private function manageMultipleMetadatas($jsonMetadata) {
+        $multipleMetadatas = [];
+        $explodedMetadata = explode('{', $jsonMetadata);
+        foreach ($explodedMetadata as $metadataJson) {
+            $fixedMetadataJson = rtrim($metadataJson, ',');
+            $concatMetadatas = json_decode("{" . $fixedMetadataJson, true);
+            if ($concatMetadatas) {
+                $multipleMetadatas[] = $concatMetadatas;
+            }
+        }
+
+        $finalConcatMetadata = "";
+        foreach ($multipleMetadatas as $metadatas) {
+            $concatMetadata = $this->manageSingleMetadata($metadatas);
+            $finalConcatMetadata = $finalConcatMetadata . $concatMetadata . " | ";
+        }
+
+        return $finalConcatMetadata;
+    }
+
+    private function manageSingleMetadata($metadatas) {
         $concatMetadata = "";
         foreach($metadatas as $field => $value) {
             $concatMetadata .= "{$field}: {$value}";
@@ -30,6 +59,7 @@ class Metadata extends AbstractRenderer
             }
             $concatMetadata .= " - ";
         }
+
         return $concatMetadata;
     }
 }

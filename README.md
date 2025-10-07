@@ -26,7 +26,4 @@
 
 ![Captura de tela de 2024-12-02 08-37-33](https://github.com/user-attachments/assets/2a406429-1bcd-4bca-9532-bbf640a7eeb2)
 
-- Log with the informations
-
-![Captura de tela de 2024-12-02 09-03-37](https://github.com/user-attachments/assets/c55cc155-58f7-49c2-b78b-69b47234d390)
 

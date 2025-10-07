@@ -7,8 +7,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <block class="Heliton\ReservationAdminGrid\Block\Adminhtml\Widget\Grid\Container" name="h_reservations.reservation.grid.container">
-                <block class="Magento\Backend\Block\Widget\Grid" name="h_reservations.reservation.grid" as="grid">
+            <block class="Heliton\ReservationAdminGrid\Block\Adminhtml\Widget\Grid\Container" name="h_reservations.incorrect.grid.container">
+                <block class="Heliton\ReservationAdminGrid\Block\Adminhtml\Incorrect\Grid" name="h_reservations.incorrect.grid" as="grid">
                     <arguments>
                         <argument name="id" xsi:type="string">clientesGrid</argument>
                         <argument name="dataSource" xsi:type="object">Heliton\ReservationAdminGrid\Model\ResourceModel\Reservation\Collection</argument>
@@ -16,32 +16,12 @@
                         <argument name="default_dir" xsi:type="string">desc</argument>
                     </arguments>
 
-                    <block class="Magento\Backend\Block\Widget\Grid\ColumnSet" name="h_reservations.reservation.grid.columnSet" as="grid.columnSet">
+                    <block class="Magento\Backend\Block\Widget\Grid\ColumnSet" name="h_reservations.incorrect.grid.columnSet" as="grid.columnSet">
                         <arguments>
                             <argument name="id" xsi:type="string">columnSet</argument>
                         </arguments>
 
-                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="reservation_id">
-                            <arguments>
-                                <argument name="header" xsi:type="string" translate="true">Reservation ID</argument>
-                                <argument name="index" xsi:type="string">reservation_id</argument>
-                                <argument name="width" xsi:type="string">50</argument>
-                                <argument name="header_css_class" xsi:type="string">col-title</argument>
-                                <argument name="column_css_class" xsi:type="string">col-title</argument>
-                            </arguments>
-                        </block>
-
-                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="stock_id">
-                            <arguments>
-                                <argument name="header" xsi:type="string" translate="true">stock ID</argument>
-                                <argument name="index" xsi:type="string">stock_id</argument>
-                                <argument name="width" xsi:type="string">50</argument>
-                                <argument name="header_css_class" xsi:type="string">col-title</argument>
-                                <argument name="column_css_class" xsi:type="string">col-title</argument>
-                            </arguments>
-                        </block>
-
-                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="sku">
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" name="h_reservations.incorrect.grid.column.sku" as="sku">
                             <arguments>
                                 <argument name="header" xsi:type="string" translate="true">SKU</argument>
                                 <argument name="index" xsi:type="string">sku</argument>
@@ -51,7 +31,17 @@
                             </arguments>
                         </block>
 
-                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="quantity">
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" name="h_reservations.incorrect.grid.column.stock_id" as="stock_id">
+                            <arguments>
+                                <argument name="header" xsi:type="string" translate="true">stock ID</argument>
+                                <argument name="index" xsi:type="string">stock_id</argument>
+                                <argument name="width" xsi:type="string">50</argument>
+                                <argument name="header_css_class" xsi:type="string">col-title</argument>
+                                <argument name="column_css_class" xsi:type="string">col-title</argument>
+                            </arguments>
+                        </block>
+
+                        <block class="Magento\Backend\Block\Widget\Grid\Column" name="h_reservations.incorrect.grid.column.quantity" as="quantity">
                             <arguments>
                                 <argument name="header" xsi:type="string" translate="true">quantity</argument>
                                 <argument name="index" xsi:type="string">quantity</argument>
@@ -69,27 +59,6 @@
                                 <argument name="width" xsi:type="string">50</argument>
                                 <argument name="header_css_class" xsi:type="string">col-title</argument>
                                 <argument name="column_css_class" xsi:type="string">col-title</argument>
-                            </arguments>
-                        </block>
-
-                        <block class="Magento\Backend\Block\Widget\Grid\Column" as="delete">
-                            <arguments>
-                                <argument name="header" xsi:type="string" translate="true">Delete</argument>
-                                <argument name="index" xsi:type="string">delete</argument>
-                                <argument name="sortable" xsi:type="string">0</argument>
-                                <argument name="width" xsi:type="string">50</argument>
-                                <argument name="type" xsi:type="string">action</argument>
-                                <argument name="getter" xsi:type="string">getId</argument>
-                                <argument name="actions" xsi:type="array">
-                                    <item name="view_action" xsi:type="array">
-                                        <item name="caption" xsi:type="string" translate="true">Delete</item>
-                                        <item name="url" xsi:type="array">
-                                            <item name="base" xsi:type="string">*/*/delete</item>
-                                        </item>
-                                        <item name="field" xsi:type="string">reservation_id</item>
-                                    </item>
-                                </argument>
-                                <argument name="filter" xsi:type="string">0</argument>
                             </arguments>
                         </block>
                     </block>
