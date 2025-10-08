@@ -38,7 +38,7 @@ class Index extends AdminIndex
         /** @var Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Heliton_ReservationAdminGrid::general');
-        $resultPage->addBreadcrumb(__('Reservations'), __('Inconsistencies Reservations'));
+        $resultPage->addBreadcrumb(__('Reservations'), __('List of Inconsistent Reservations'));
         $resultPage->getConfig()->getTitle()->prepend(__('List of Inconsistent Reservations'));
 
         return $resultPage;

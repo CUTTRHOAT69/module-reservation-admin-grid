@@ -7,21 +7,32 @@ declare(strict_types=1);
 
 namespace Heliton\ReservationAdminGrid\Block\Adminhtml\Incorrect;
 
-use Magento\Backend\Block\Widget\Grid as MagentoGrid;
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Helper\Data as BackendHelper;
 use Heliton\ReservationAdminGrid\Model\ResourceModel\Reservation\CollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Heliton\ReservationAdminGrid\Model\Config;
+use Magento\Backend\Block\Widget\Grid as MagentoGrid;
 use \Zend_Db_Select;
 use \Zend_Db_Expr;
 
 class Grid extends MagentoGrid
 {
+    const MAGENTO_INCREMENT_ID_COLUMN = 'increment_id';
+    const MAGENTO_QUANTITY_COLUMN = 'quantity';
+    const MAGENTO_STOCK_ID_COLUMN = 'stock_id';
+    const MAGENTO_METADATA_COLUMN = 'metadata';
+    const MAGENTO_STATUS_COLUMN = 'status';
+    const MAGENTO_SKU_COLUMN = 'sku';
+
+    const MAGENTO_METADATA_INCREMENT_ID_KEY = 'object_increment_id';
+
     public function __construct(
         protected Context $context,
         protected BackendHelper $backendHelper,
         protected CollectionFactory $collectionFactory,
         protected OrderCollectionFactory $orderCollectionFactory,
+        protected Config $config,
         protected array $data = []
     ) {
         parent::__construct($context, $backendHelper, $data);
@@ -41,18 +52,15 @@ class Grid extends MagentoGrid
 
     private function getIncorrectOrdersIdsByFinalStatus($potentialIncorrectOrdersIds): array
     {
-        $finalStatuses = $this->_scopeConfig->getValue(
-            'h_reservation/general/order_statuses',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        $finalStatuses = $this->config->getOrderStatuses();
 
         $orderCollection = $this->orderCollectionFactory->create()
-            ->addFieldToFilter('increment_id', ['in' => array_values($potentialIncorrectOrdersIds)])
-            ->addFieldToFilter('status', ['in' => $finalStatuses]);
+            ->addFieldToFilter(self::MAGENTO_INCREMENT_ID_COLUMN, ['in' => array_values($potentialIncorrectOrdersIds)])
+            ->addFieldToFilter(self::MAGENTO_STATUS_COLUMN, ['in' => $finalStatuses]);
 
         $invalidOrdersIds = [];
         foreach ($orderCollection as $order) {
-            $invalidOrdersIds[] = $order->getData("increment_id");
+            $invalidOrdersIds[] = $order->getData(self::MAGENTO_INCREMENT_ID_COLUMN);
         }
 
         return $invalidOrdersIds;
@@ -65,24 +73,24 @@ class Grid extends MagentoGrid
         $select = $collection->getSelect();
         $select->reset(Zend_Db_Select::COLUMNS)
             ->columns([
-                'sku'      => 'sku',
-                'stock_id' => 'stock_id',
-                'quantity' => new Zend_Db_Expr('SUM(quantity)'),
-                'metadata' => new Zend_Db_Expr('GROUP_CONCAT(metadata)')
+                self::MAGENTO_SKU_COLUMN => self::MAGENTO_SKU_COLUMN,
+                self::MAGENTO_STOCK_ID_COLUMN => self::MAGENTO_STOCK_ID_COLUMN,
+                self::MAGENTO_QUANTITY_COLUMN => new Zend_Db_Expr('SUM('. self::MAGENTO_QUANTITY_COLUMN .')'),
+                self::MAGENTO_METADATA_COLUMN => new Zend_Db_Expr('GROUP_CONCAT(' . self::MAGENTO_METADATA_COLUMN . ')')
             ])
-            ->group(['sku', 'stock_id'])
-            ->having('SUM(quantity) != 0');
+            ->group([self::MAGENTO_SKU_COLUMN, self::MAGENTO_STOCK_ID_COLUMN])
+            ->having('SUM(' . self::MAGENTO_QUANTITY_COLUMN . ') != 0');
 
         $incrementIds = [];
         foreach ($collection as $item) {
-            $metadataConcat = $item->getData('metadata');
+            $metadataConcat = $item->getData(self::MAGENTO_METADATA_COLUMN);
 
             $explodedMetadata = explode('{', $metadataConcat);
             foreach ($explodedMetadata as $metadataJson) {
                 $fixedMetadataJson = rtrim($metadataJson, ',');
                 $meta = json_decode("{" . $fixedMetadataJson, true);
-                if (!empty($meta['object_increment_id'])) {
-                    $incrementIds[] = $meta['object_increment_id'];
+                if (!empty($meta[self::MAGENTO_METADATA_INCREMENT_ID_KEY])) {
+                    $incrementIds[] = $meta[self::MAGENTO_METADATA_INCREMENT_ID_KEY];
                 }
             }
         }
@@ -100,9 +108,9 @@ class Grid extends MagentoGrid
     private function getExistingIncrementIds(array $incrementIds): array
     {
         $collection = $this->orderCollectionFactory->create();
-        $collection->addFieldToFilter('increment_id', ['in' => $incrementIds]);
+        $collection->addFieldToFilter(self::MAGENTO_INCREMENT_ID_COLUMN, ['in' => $incrementIds]);
 
-        $existingIds = $collection->getColumnValues('increment_id');
+        $existingIds = $collection->getColumnValues(self::MAGENTO_INCREMENT_ID_COLUMN);
 
         return $existingIds;
     }
@@ -113,17 +121,17 @@ class Grid extends MagentoGrid
 
         $invalidReservationCollection->getSelect()->reset(Zend_Db_Select::COLUMNS)
             ->columns([
-                'sku'      => 'sku',
-                'stock_id' => 'stock_id',
-                'quantity' => new Zend_Db_Expr('SUM(quantity)'),
-                'metadata' => new Zend_Db_Expr('GROUP_CONCAT(metadata)')
+                self::MAGENTO_SKU_COLUMN => self::MAGENTO_SKU_COLUMN,
+                self::MAGENTO_STOCK_ID_COLUMN => self::MAGENTO_STOCK_ID_COLUMN,
+                self::MAGENTO_QUANTITY_COLUMN => new Zend_Db_Expr('SUM('. self::MAGENTO_QUANTITY_COLUMN .')'),
+                self::MAGENTO_METADATA_COLUMN => new Zend_Db_Expr('GROUP_CONCAT(' . self::MAGENTO_METADATA_COLUMN . ')')
             ])
-            ->group(['sku', 'stock_id'])
-            ->having('SUM(quantity) != 0');
+            ->group([self::MAGENTO_SKU_COLUMN, self::MAGENTO_STOCK_ID_COLUMN])
+            ->having('SUM(' . self::MAGENTO_QUANTITY_COLUMN . ') != 0');
 
         $whereStatement = "";
         foreach ($invalidOrdersIds as $invalidOrderIncrementId) {
-            $whereStatement = $whereStatement . 'metadata LIKE '.'"%' . $invalidOrderIncrementId . '%" OR ';
+            $whereStatement = $whereStatement . self::MAGENTO_METADATA_COLUMN . ' LIKE '.'"%' . $invalidOrderIncrementId . '%" OR ';
         }
 
         $whereStatement = rtrim($whereStatement, 'OR ');

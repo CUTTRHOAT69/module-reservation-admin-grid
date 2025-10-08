@@ -90,6 +90,7 @@ class ReservationRepository implements ReservationRepositoryInterface
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $collection = $this->reservationCollectionFactory->create();
+
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $fields = [];
             $conditions = [];
@@ -98,12 +99,15 @@ class ReservationRepository implements ReservationRepositoryInterface
                 $fields[] = $filter->getField();
                 $conditions[] = [$condition => $filter->getValue()];
             }
+
             if ($fields) {
                 $collection->addFieldToFilter($fields, $conditions);
             }
         }
+
         $searchResults->setTotalCount($collection->getSize());
         $sortOrders = $criteria->getSortOrders();
+
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
             foreach ($sortOrders as $sortOrder) {
@@ -113,13 +117,17 @@ class ReservationRepository implements ReservationRepositoryInterface
                 );
             }
         }
+
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
         $objects = [];
+
         foreach ($collection as $objectModel) {
             $objects[] = $objectModel;
         }
+
         $searchResults->setItems($objects);
+
         return $searchResults;
     }
 }

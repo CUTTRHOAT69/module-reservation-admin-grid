@@ -2,6 +2,7 @@
 /**
  * Copyright © Heliton. All rights reserved.
  */
+
 declare(strict_types=1);
 
 namespace Heliton\ReservationAdminGrid\Model;
